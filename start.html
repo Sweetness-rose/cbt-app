@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <link rel="shortcut icon" href="cbtFav.jpeg" type="image/x-icon">
+    <link rel="stylesheet" href="start.css">
+    <script
+    src="https://kit.fontawesome.com/b87b03660d.js"
+    crossorigin="anonymous">
+    </script>
+</head>
+<body>
+   <main>
+    <h1>Welcome <span id="foundCandidateName">Loading...</span></h1>
+    <p>You are about to take a test</p>
+    <div class="iconDiv">
+        <p><i class="fa-solid fa-circle-question"></i> 15 Questions</p>
+        <p><i class="fa-solid fa-clock"></i> Time: 5 Minutes</p>
+        <p><i class="fa-solid fa-check"></i> Pass Mark: 50%</p>
+    </div>
+    <button onclick="startTest()">Start Test</button>
+    <button onclick="logOut()">Log Out</button>
+   </main>
+</body>
+</html>
+<script>
+
+let candidateDatabase = JSON.parse(localStorage.getItem('cbtCandidateDatabase')) || []
+let currentCandidateIndex = localStorage.getItem('currentCandidateIndex')
+let currentCandidate = candidateDatabase[currentCandidateIndex]
+let spanTag = document.getElementById('foundCandidateName')
+
+if (!currentCandidate) {
+    window.location.href = 'login.html'
+}
+
+spanTag.innerHTML = `${currentCandidate.username}`
+
+function startTest() {
+    if (currentCandidate) {
+        alert('You are in and your time starts immediately.')
+        window.location.href = 'cbt.html'
+    }
+}
+
+function logOut() {
+    let confirmer = confirm('are you sure?')
+        if (confirmer) {
+            localStorage.removeItem('currentCandidateIndex')
+            alert('logout successful')
+            window.location.href = 'login.html'
+        }
+}
+
+</script>

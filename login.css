@@ -1,0 +1,121 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+main {
+    background: #ffffff;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px #0000001a;
+    text-align: center;
+}
+
+header h1 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.inputDiv {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid #dcdde1;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #3498db;
+}
+
+.passwordInput {
+    position: relative;
+    width: 100%;
+}
+
+#passwordButton {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #7f8c8d;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#passwordButton:hover {
+    color: #3498db;
+}
+
+#myButton {
+    width: 100%;
+    padding: 14px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-bottom: 20px;
+}
+
+#myButton:hover {
+    background-color: #2980b9;
+}
+
+#myButton:active {
+    transform: scale(0.98);
+}
+
+p {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+p a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    main {
+        padding: 30px 20px;
+    }
+    
+    header h1 {
+        font-size: 24px;
+    }
+}

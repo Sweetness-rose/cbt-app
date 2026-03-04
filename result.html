@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+    <link rel="shortcut icon" href="cbtFav.jpeg" type="image/x-icon">
+    <link rel="stylesheet" href="result.css">
+    <script
+    src="https://kit.fontawesome.com/b87b03660d.js"
+    crossorigin="anonymous">
+    </script>
+</head>
+<body>
+    
+    <div id="resultPage" class="page">
+
+    <h2>Your Results</h2>
+  
+    <div id="summaryBox">
+      <p id="resultName">Candidate:</p>
+      <p id="resultDate">Date:</p>
+      <p id="resultTime">Time Taken:</p>
+      <p id="resultScore">Score:</p>
+      <p id="resultPercent">Percentage:</p>
+      <p id="resultPassedCount">Questions Passed:</p>
+      <p id="resultFailedCount">Questions Failed:</p>
+      <p id="resultStatus">Status:</p>
+    </div>
+
+    <h3>Questions You Got Right</h3>
+    <div id="passedList"></div>
+
+    <h3>Questions You Got Wrong</h3>
+    <div id="failedList"></div>
+ 
+    <div id="resultButtons">
+      <button id="printBtn" onclick="window.print()">Print Result</button>
+      <button id="retakeBtn" onclick="retakeTest()">Take Test Again</button>
+    </div>
+  
+  </div>
+</body>
+</html>
+<script>
+    let result = JSON.parse(localStorage.getItem("cbtLatestResult"));
+    
+
+    if (!result) {
+      document.getElementById("resultPage").innerHTML = `
+        <div class='noResults'>
+          <p>No results found. Take a test first!</p>
+          <button onclick="window.location.href='cbt.html'">Go to Quiz</button>
+        </div>
+      `;
+    } else {
+      document.getElementById("resultName").innerHTML = `Candidate: ${result.name}`;
+      document.getElementById("resultDate").innerHTML = `Date: ${result.date} at ${result.time}`;
+      document.getElementById("resultTime").innerHTML = `Time Taken: ${result.timeTaken}`;
+      document.getElementById("resultScore").innerHTML = `Score: ${result.correct} / ${result.totalQuestions}`;
+      document.getElementById("resultPercent").innerHTML = `Percentage: ${result.percentage}%`;
+      document.getElementById("resultPassedCount").innerHTML = `Questions Passed: ${result.correct}`;
+      document.getElementById("resultFailedCount").innerHTML = `Questions Failed: ${result.wrong}`;
+
+      let statusEl = document.getElementById("resultStatus");
+      if (result.passed) {
+        statusEl.innerHTML = `Status: PASSED`;
+        statusEl.style.color = "#10b981";
+      } else {
+        statusEl.innerHTML = `Status: FAILED`;
+        statusEl.style.color = "#ef4444";
+      }
+
+      let passedHTML = "";
+
+      if (result.passedQuestions.length === 0) {
+        passedHTML = `<p style='color:#888888; font-style:italic;'>No questions passed.</p>`;
+      } else {
+        for (let i = 0; i < result.passedQuestions.length; i++) {
+          let q = result.passedQuestions[i];
+          passedHTML = passedHTML + `
+            <div class='resultItem resultCorrect'>
+              <strong>Q${q.number}: ${q.text}</strong><br>
+              Your answer: ${q.userAnswer}) ${q.userAnswerText}
+            </div>
+          `;
+        }
+      }
+
+      document.getElementById("passedList").innerHTML = passedHTML;
+
+      let failedHTML = "";
+
+      if (result.failedQuestions.length === 0) {
+        failedHTML = `<p style='color:#888888; font-style:italic;'>No questions failed. Perfect score!</p>`;
+      } else {
+        for (let i = 0; i < result.failedQuestions.length; i++) {
+          let q = result.failedQuestions[i];
+
+          let userDisplay = "No answer";
+          if (q.userAnswer !== null) {
+            userDisplay = `${q.userAnswer}) ${q.userAnswerText}`;
+          }
+
+          failedHTML = failedHTML + `
+            <div class='resultItem resultWrong'>
+              <strong>Q${q.number}: ${q.text}</strong><br>
+              Your answer: ${userDisplay} <br>
+              Correct answer: ${q.correctAnswer}) ${q.correctAnswerText} 
+            </div>
+          `;
+        }
+      }
+
+      document.getElementById("failedList").innerHTML = failedHTML;
+    }
+
+    function retakeTest() {
+        window.location.href = 'cbt.html'
+    }
+</script>

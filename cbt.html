@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT APP</title>
+    <link rel="shortcut icon" href="cbtFav.jpeg" type="image/x-icon">
+    <link rel="stylesheet" href="cbt.css">
+    <script
+    src="https://kit.fontawesome.com/b87b03660d.js"
+    crossorigin="anonymous">
+    </script>
+</head>
+<body>
+  <div id="quizPage" class="page">
+
+    <div id="quizTopBar">
+      <span id="questionCounter">Question 1 of 30</span>
+      <span id="timerDisplay">10:00</span>
+    </div>
+
+    <div id="progressBar">
+      <div id="progressFill"></div>
+    </div>
+
+    <p id="questionText">question container</p>
+
+    <button id="optionA" class="optionBtn" onclick="pickAnswer('A')">A. </button>
+    <button id="optionB" class="optionBtn" onclick="pickAnswer('B')">B. </button>
+    <button id="optionC" class="optionBtn" onclick="pickAnswer('C')">C. </button>
+    <button id="optionD" class="optionBtn" onclick="pickAnswer('D')">D. </button>
+
+    <div id="quizNavButtons">
+      <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+      <button id="nextBtn" onclick="nextQuestion()">Next</button>
+      <button id="submitBtn" onclick="confirmSubmit()">Submit</button>
+    </div>
+
+    <!-- <button id="viewResultsBtn" onclick="goToResults()">View Past Results</button> -->
+
+  </div>
+</body>
+</html>
+<script>
+
+const questions = [
+  {
+    question: "What is the capital of France?",
+    options: {
+      A: "Berlin",
+      B: "Madrid",
+      C: "Paris",
+      D: "Rome"
+    },
+    correctAnswer: "C"
+  },
+  {
+    question: "Who wrote 'Romeo and Juliet'?",
+    options: {
+      A: "Charles Dickens",
+      B: "William Shakespeare",
+      C: "Mark Twain",
+      D: "Jane Austen"
+    },
+    correctAnswer: "B"
+  },
+  {
+    question: "How many continents are there?",
+    options: {
+      A: "5",
+      B: "6",
+      C: "7",
+      D: "8"
+    },
+    correctAnswer: "C"
+  },
+  {
+    question: "Who painted the Mona Lisa?",
+    options: {
+      A: "Pablo Picasso",
+      B: "Vincent van Gogh",
+      C: "Leonardo da Vinci",
+      D: "Michelangelo"
+    },
+    correctAnswer: "C"
+  },
+  {
+    question: "Which country hosted the 2016 Summer Olympics?",
+    options: {
+      A: "China",
+      B: "Brazil",
+      C: "UK",
+      D: "Japan"
+    },
+    correctAnswer: "B"
+  },
+  {
+    question: "Which organ pumps blood through the body?",
+    options: {
+      A: "Lungs",
+      B: "Brain",
+      C: "Heart",
+      D: "Kidney"
+    },
+    correctAnswer: "C"
+  },
+  {
+    question: "Who discovered gravity?",
+    options: {
+      A: "Albert Einstein",
+      B: "Isaac Newton",
+      C: "Galileo Galilei",
+      D: "Nikola Tesla"
+    },
+    correctAnswer: "B"
+  },
+  {
+    question: "What is the chemical symbol for Gold?",
+    options: {
+      A: "Au",
+      B: "Ag",
+      C: "Gd",
+      D: "Go"
+    },
+    correctAnswer: "A"
+  },
+  {
+    question: "How many days are in a leap year?",
+    options: {
+      A: "365",
+      B: "366",
+      C: "364",
+      D: "360"
+    },
+    correctAnswer: "B"
+  },
+  {
+    question: "What is the smallest prime number?",
+    options: {
+      A: "0",
+      B: "1",
+      C: "2",
+      D: "3"
+    },
+    correctAnswer: "C"
+  },
+  {
+    question: "How many sides does a hexagon have?",
+    options: {
+      A: "5",
+      B: "6",
+      C: "7",
+      D: "8"
+    },
+    correctAnswer: "B"
+  },
+  {
+    question: "Which animal is known as the King of the Jungle?",
+    options: {
+      A: "Tiger",
+      B: "Elephant",
+      C: "Lion",
+      D: "Leopard"
+    },
+    correctAnswer: "C"
+  },
+  {
+    question: "What is the square root of 64?",
+    options: {
+      A: "6",
+      B: "7",
+      C: "8",
+      D: "9"
+    },
+    correctAnswer: "C"
+  },
+  {
+    question: "Which blood type is known as the universal donor?",
+    options: {
+      A: "A",
+      B: "B",
+      C: "AB",
+      D: "O"
+    },
+    correctAnswer: "D"
+  },
+  {
+    question: "Which country is famous for the Eiffel Tower?",
+    options: {
+      A: "Germany",
+      B: "France",
+      C: "Italy",
+      D: "Canada"
+    },
+    correctAnswer: "B"
+  }
+];
+    
+let studentAnswers = []          
+let currentQuestion = 0 
+let timeLeft = 300        
+let timerID
+
+console.log(questions.length);
+
+
+
+function startQuiz() {
+  studentAnswers = [];
+  for (let i = 0; i < questions.length; i++) {
+    studentAnswers.push(null)
+  }
+  currentQuestion = 0
+  timeLeft = 300
+
+  showQuestion()
+  startTimer()
+}
+
+function showQuestion() {
+  let question = questions[currentQuestion];
+  let total = questions.length;
+
+  document.getElementById("questionCounter").innerHTML =
+  `Question ${currentQuestion + 1} of ${total}`
+
+  let percent = ((currentQuestion + 1) / total) * 100;
+  document.getElementById("progressFill").style.width = `${percent}%`
+
+  document.getElementById("questionText").innerHTML = question.question
+
+  document.getElementById("optionA").innerHTML = `A. ${question.options.A}`
+  document.getElementById("optionB").innerHTML = `B. ${question.options.B}`
+  document.getElementById("optionC").innerHTML = `C. ${question.options.C}`
+  document.getElementById("optionD").innerHTML = `D. ${question.options.D}`
+
+  document.getElementById("optionA").classList.remove("selected")
+  document.getElementById("optionB").classList.remove("selected")
+  document.getElementById("optionC").classList.remove("selected")
+  document.getElementById("optionD").classList.remove("selected")
+
+  if (studentAnswers[currentQuestion] !== null) {
+    let picked = studentAnswers[currentQuestion];
+    let pickedId = 'option' + picked
+    document.getElementById(pickedId).classList.add("selected")
+  }
+
+  if (currentQuestion === 0) {
+    document.getElementById("prevBtn").style.display = "none"
+  } else {
+    document.getElementById("prevBtn").style.display = "block"
+  }
+
+  if (currentQuestion === total - 1) {
+    document.getElementById("nextBtn").style.display = "none"
+    document.getElementById("submitBtn").style.display = "block"
+  } else {
+    document.getElementById("nextBtn").style.display = "block"
+    document.getElementById("submitBtn").style.display = "none"
+  }
+}
+
+function pickAnswer(letter) {
+  studentAnswers[currentQuestion] = letter
+  showQuestion()
+}
+
+function nextQuestion() {
+  if (currentQuestion < questions.length - 1) {
+    currentQuestion++
+    showQuestion()
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestion > 0) { 
+    currentQuestion--
+    showQuestion()
+  }
+}
+
+function startTimer() {
+  clearInterval(timerID)
+  updateTimerDisplay()
+
+  timerID = setInterval(function() {
+  timeLeft = timeLeft - 1
+  updateTimerDisplay()
+
+    if (timeLeft <= 0) {
+      clearInterval(timerID)
+      alert('Time is up! Your test will be submitted now.')
+      submitTest()
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  let minutes = Math.floor(timeLeft / 60);
+  let seconds = timeLeft % 60;
+
+  let secondsText = seconds;
+  if (seconds < 10) {
+        secondsText = '0' + seconds;
+    }
+
+  let display = `${minutes}:${secondsText}`
+  document.getElementById("timerDisplay").innerHTML = display;
+
+  if (timeLeft <= 60) {
+    document.getElementById("timerDisplay").classList.add("warning")
+  } else {
+    document.getElementById("timerDisplay").classList.remove("warning")
+  }
+}
+
+function confirmSubmit() {
+  let unanswered = 0;
+  for (let i = 0; i < studentAnswers.length; i++) {
+    if (studentAnswers[i] === null) {
+      unanswered = unanswered + 1
+    }
+  }
+
+  let message = 'Are you sure you want to submit?'
+  if (unanswered > 0) {
+    message = `You have ${unanswered} unanswered question(s).`
+  }
+
+  let confirmed = confirm(message);
+  if (confirmed) {
+    submitTest()
+  }
+}
+
+function submitTest() {
+  clearInterval(timerID);
+
+  let correctCount = 0;
+  let wrongCount = 0;
+  let passedQuestions = [];
+  let failedQuestions = [];
+
+  for (let i = 0; i < questions.length; i++) {
+    let q = questions[i];
+    let userAnswer = studentAnswers[i];
+    let correctAnswer = q.correctAnswer;
+
+    if (userAnswer === correctAnswer) {
+      correctCount = correctCount + 1;
+      passedQuestions.push({
+        number: i + 1,
+        text: q.question,
+        userAnswer: userAnswer,
+        userAnswerText: q.options[userAnswer],
+        correctAnswer: correctAnswer,
+        correctAnswerText: q.options[correctAnswer]
+      });
+    } else {
+      wrongCount = wrongCount + 1;
+
+      let userAnswerText = "No answer";
+      if (userAnswer !== null) {
+        userAnswerText = q.options[userAnswer];
+      }
+
+      failedQuestions.push({
+        number: i + 1,
+        text: q.question,
+        userAnswer: userAnswer,
+        userAnswerText: userAnswerText,
+        correctAnswer: correctAnswer,
+        correctAnswerText: q.options[correctAnswer]
+      });
+    }
+  }
+
+  let percentage = Math.round((correctCount / questions.length) * 100);
+
+  let timeTakenSeconds = totalTime - timeLeft;
+  let timeTakenMin = Math.floor(timeTakenSeconds / 60);
+  let timeTakenSec = timeTakenSeconds % 60;
+  let timeTakenText = timeTakenMin + " min " + timeTakenSec + " sec";
+
+  let passed = percentage >= 50;
+
+  let now = new Date();
+  let dateText = now.toLocaleDateString();
+  let timeText = now.toLocaleTimeString();
+
+  let result = {
+    name: "Student",
+    date: dateText,
+    time: timeText,
+    timeTaken: timeTakenText,
+    totalQuestions: questions.length,
+    correct: correctCount,
+    wrong: wrongCount,
+    percentage: percentage,
+    passed: passed,
+    passedQuestions: passedQuestions,
+    failedQuestions: failedQuestions
+  };
+
+  localStorage.setItem("cbtLatestResult", JSON.stringify(result));
+
+  window.location.href = "result.html";
+}
+
+startQuiz();
+</script>

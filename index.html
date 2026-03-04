@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <link rel="shortcut icon" href="cbtFav.jpeg" type="image/x-icon">
+    <link rel="stylesheet" href="index.css">
+    <script
+    src="https://kit.fontawesome.com/b87b03660d.js"
+    crossorigin="anonymous">
+    </script>
+</head>
+<body>
+    <main>
+        <header>
+            <h1>Sign Up</h1>
+        </header>
+       <div class="inputDiv">
+        <input type="text" placeholder="Username" id="username">
+        <input type="email" placeholder="Email Address" id="email">
+        <div class="passwordInput">
+            <input type="password" placeholder="Password" id="password"> 
+            <button onclick="showHidePassword()" id="passwordButton"> <i class="fa-solid fa-eye-slash"></i></button>
+        </div>
+        <input type="password" placeholder="Confirm Password" id="confirmPassword">
+       </div> 
+
+       <button onclick="signUpUser()" id="myButton">Sign Up</button>
+       <p>Already have an account? <a href="login.html">Sign in</a></p>
+    </main>
+</body>
+</html>
+<script>
+    let candidateDatabase = JSON.parse(localStorage.getItem('cbtCandidateDatabase')) || []
+    let myButton = document.getElementById('myButton')
+    let buttonTag = document.getElementById('passwordButton')
+
+    console.log(candidateDatabase);
+
+    function signUpUser() {
+
+        let username = document.getElementById('username').value.trim()
+        let email = document.getElementById('email').value.trim().toLowerCase() 
+        let password = document.getElementById('password').value.trim()
+        let confirmPassword = document.getElementById('confirmPassword').value.trim()
+        let foundCandidate = candidateDatabase.find((candidate) => { return candidate.email === email })
+
+        if (!username || !email || !password || !confirmPassword) {
+            alert('all fields are mandatory')
+
+        } else if (password.length < 8) {
+            alert('password must be at least 8 characters')
+
+        } else if (password !== confirmPassword) {
+            alert('password does not match')
+
+        } else if (foundCandidate) {
+            alert('this email is already in use')
+        } else {
+            myButton.innerHTML = 'loading...'
+            myButton.disabled = true
+            setTimeout(() => {
+                let candidate = {
+                    username,
+                    email,
+                    password,
+                }
+                candidateDatabase.push(candidate)
+                localStorage.setItem('cbtCandidateDatabase', JSON.stringify(candidateDatabase))
+                console.log(candidateDatabase);
+                alert('Sign Up successful')
+                myButton.innerHTML = 'Sign Up'
+                clearForm()
+                window.location.href = 'login.html'
+                myButton.disabled = false
+            }, 3000
+            )
+
+        }
+    }
+
+
+    function showHidePassword() {
+        if (password.type === 'password') {
+            password.type = 'text'
+            buttonTag.innerHTML = `<i class="fa-solid fa-eye"></i>`
+            
+        } else {
+            password.type = 'password'
+            buttonTag.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`
+        }
+    }
+
+    function clearForm() {
+        document.getElementById('email').value = ''
+        document.getElementById('password').value = ''
+        document.getElementById('username').value = ''
+        document.getElementById('confirmPassword').value = ''
+        document.getElementById('terms').checked = false
+    }
+
+    
+</script>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+    <link rel="shortcut icon" href="cbtFav.jpeg" type="image/x-icon">
+    <link rel="stylesheet" href="login.css">
+    <script
+    src="https://kit.fontawesome.com/b87b03660d.js"
+    crossorigin="anonymous">
+    </script>
+</head>
+<body>
+    <main>
+        <header>
+            <h1>Log in</h1>
+        </header>
+       <div class="inputDiv">
+        <input type="email" placeholder="Email Address" id="email">
+        <div class="passwordInput">
+            <input type="password" placeholder="Password" id="password"> 
+            <button onclick="showHidePassword()" id="passwordButton"> <i class="fa-solid fa-eye-slash"></i></button>
+        </div>
+       </div> 
+
+       <button onclick="logInUser()" id="myButton">Log in</button>
+       <p>Don't have an account? <a href="index.html">Sign up</a></p>
+    </main>
+</body>
+</html>
+<script>
+    let candidateDatabase = JSON.parse(localStorage.getItem('cbtCandidateDatabase')) || []
+    let myButton = document.getElementById('myButton')
+    let buttonTag = document.getElementById('passwordButton')
+
+    console.log(candidateDatabase, foundCandidate);
+
+    function logInUser() {
+
+        let email = document.getElementById('email').value.trim().toLowerCase() 
+        let password = document.getElementById('password').value.trim()
+        let foundCandidate = candidateDatabase.find((candidate) => { return candidate.email === email })
+
+        if (foundCandidate) {
+            if (foundCandidate.password === password) {
+                window.location.href = 'start.html'
+                let foundCandidateIndex = candidateDatabase.findIndex((candidate) => candidate.email === email)
+                localStorage.setItem('currentCandidateIndex', foundCandidateIndex)
+                alert('login successful')
+            } else {
+                alert('incorrect password!!')
+            }
+        } else {
+            alert('candidate not found ')
+
+        }
+
+    }
+
+    function showHidePassword() {
+        if (password.type === 'password') {
+            password.type = 'text'
+            buttonTag.innerHTML = `<i class="fa-solid fa-eye"></i>`
+            
+        } else {
+            password.type = 'password'
+            buttonTag.innerHTML = `<i class="fa-solid fa-eye-slash"></i>`
+        }
+    }
+
+    function clearForm() {
+        document.getElementById('email').value = ''
+        document.getElementById('password').value = ''
+        document.getElementById('username').value = ''
+        document.getElementById('confirmPassword').value = ''
+        document.getElementById('terms').checked = false
+    }
+
+    
+</script>
